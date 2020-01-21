@@ -1,0 +1,22 @@
+{
+  "name": "chat-node-line",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taraddev1234/chat-node-line.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taraddev1234/chat-node-line/issues"
+  },
+  "homepage": "https://github.com/taraddev1234/chat-node-line#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

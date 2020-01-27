@@ -7,6 +7,8 @@ var server = app.listen(PORT, () =>{
     console.log('Start server at port '+PORT)
 })
 
+console.log('test');
+
 app.get('/',(req,res) =>{
     res.send('Hello World2')
 })

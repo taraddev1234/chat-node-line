@@ -96,6 +96,21 @@ io.sockets.on('connection' , function(socket){
             };
     
             client.pushMessage(data.user_id, msg);
+
+            axios.post(uri+'/chats/create', {
+                spf_id_pk: data.shop_id,
+                line_id: data.user_id,
+                message: data.message,
+                type: 1,
+              })
+              .then(function (response) {
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+
+
         }else{
             console.log("is not' config ")
         }

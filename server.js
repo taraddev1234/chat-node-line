@@ -4,6 +4,7 @@ const axios = require('axios');
 const line = require('@line/bot-sdk');
 const bodyParser = require('body-parser')
 const request = require('request')
+const qs = require('querystring');
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -25,23 +26,44 @@ if(config){
     const client = new line.Client(config);
 }
 
+const config_body_axios = {
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+}
+
 
 app.post('/webhook', (req, res) => {
     // let reply_token = req.body.events
     //console.log(req.body.events[0].message.text)
     var  re_token = req.body.events[0].source.userId
-    console.log(req.body.events);
-    console.log(req.body.events[0].message.contentProvider);
+    //console.log(req.body.events);
+    //console.log(req.body.events[0].message.contentProvider);
     
-    io.sockets.to(socket_id).emit('receiveMsg',{shop_id:shop_id,line_id:re_token,message:req.body.events[0].message.text})
-    console.log(re_token)
-    if(config != ""){
-        //console.log(config)
-        //const client = new line.Client(config);
+    if(req.body.events[0].message.type === 'text'){
+        io.sockets.to(socket_id).emit('receiveMsg',{shop_id:shop_id,line_id:re_token,message:req.body.events[0].message.text})
+        //console.log(re_token)
+        if(config != ""){
 
-        // add db type 1
+            // add db type 2
+            axios.post(uri+'/chats/create', qs.stringify({
+                spf_id_pk: shop_id,
+                line_id: re_token,
+                message: req.body.events[0].message.text,
+                type: 2,
+            }), config_body_axios)
+            .then(function (response) {
+                console.log('ok');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        }else{
+            console.log("is not' config ")
+        }
     }else{
-        console.log("is not' config ")
+        console.log(' is not TEXT ');
     }
 
 })
@@ -97,19 +119,19 @@ io.sockets.on('connection' , function(socket){
     
             client.pushMessage(data.user_id, msg);
 
-            axios.post(uri+'/chats/create', {
+           
+            axios.post(uri+'/chats/create', qs.stringify({
                 spf_id_pk: data.shop_id,
                 line_id: data.user_id,
                 message: data.message,
                 type: 1,
-              })
+            }), config_body_axios)
               .then(function (response) {
-                console.log(response);
+                console.log('ok');
               })
               .catch(function (error) {
                 console.log(error);
-              });
-
+            });
 
         }else{
             console.log("is not' config ")
